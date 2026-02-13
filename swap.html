@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swap</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1e90ff;
+    background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px);
+    background-size: 25px 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 18px;
+    width: 450px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.25);
+}
+
+select, input, button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+}
+
+button {
+    background: #0066ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #004ec2;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    width: 420px;
+    text-align: center;
+}
+
+.red {
+    color: red;
+    font-weight: bold;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    width: 48%;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Swap</h2>
+
+    <select id="fromToken" onchange="checkToken()">
+        <option value="">Select From Token</option>
+        <option>A7A5</option>
+        <option>McLarencoin</option>
+        <option>Murphycoin</option>
+        <option>Dutchcoin</option>
+        <option>Germcoin</option>
+        <option>Sprucecoin</option>
+        <option>Nistlercoin</option>
+        <option>Meadowlarkcoin</option>
+    </select>
+
+    <select id="recipient" onchange="checkRecipient()">
+        <option value="">Select Counterparty</option>
+        <option>Lindsay</option>
+        <option>Brian</option>
+    </select>
+
+    <input type="number" placeholder="Enter amount" />
+    <button>Swap</button>
+</div>
+
+<div class="modal" id="alertModal">
+    <div class="modal-box" id="modalContent"></div>
+</div>
+
+<script>
+function showModal(title, message, redTitle=false) {
+    const box = document.getElementById("modalContent");
+    box.innerHTML = `
+        <h2 class="${redTitle ? 'red' : ''}">${title}</h2>
+        <p>${message}</p>
+        <div class="modal-buttons">
+            <button onclick="closeModal()">Go back</button>
+            <button onclick="closeModal()">Continue</button>
+        </div>
+    `;
+    document.getElementById("alertModal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("alertModal").style.display = "none";
+}
+
+function checkToken() {
+    const token = document.getElementById("fromToken").value;
+
+    if (token === "A7A5") {
+        showModal(
+            "Not available",
+            "Unavailable at this time: Uniswap delists tokens deemed to be developed or backed by sanctioned entities, such as A7A5 which is Russian-based and backed by the ruble."
+        );
+    }
+
+    if (token === "McLarencoin") {
+        showModal(
+            "Malicious token detected",
+            "McLarencoin has been flagged as malicious. Always do your own research before proceeding.",
+            true
+        );
+    }
+
+    if (token === "Murphycoin") {
+        showModal(
+            "100% sell fee detected",
+            "Murphycoin charges a 100% fee when sold. Swapping this token may result in a total loss of funds.",
+            true
+        );
+    }
+}
+
+function checkRecipient() {
+    const recipient = document.getElementById("recipient").value;
+
+    if (recipient === "Brian") {
+        showModal(
+            "Fraudulent user detected",
+            "fraudulent user detected.",
+            true
+        );
+    }
+}
+</script>
+
+</body>
+</html>
