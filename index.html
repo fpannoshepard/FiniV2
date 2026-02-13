@@ -1,113 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Swap Demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlueSwap</title>
 
 <style>
+/* ===== BACKGROUND ===== */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #1e90ff;
-    background-image:
-        linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px),
-        linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px);
-    background-size: 25px 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background-color: #0a0f1f;
+    background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.2) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.2) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.container {
-    background: white;
-    padding: 40px;
-    border-radius: 18px;
-    width: 400px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(0,0,0,0.25);
+/* ===== HEADER ===== */
+.header {
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #0066ff, #000000);
+    border-radius: 8px;
+}
+
+/* ===== MAIN CARD ===== */
+.swap-card {
+    margin-top: 80px;
+    background: #111827;
+    padding: 30px;
+    width: 420px;
+    border-radius: 24px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+}
+
+h2 {
+    margin-top: 0;
+    font-weight: 600;
+}
+
+/* ===== INPUT BOXES ===== */
+.input-box {
+    background: #1f2937;
+    padding: 16px;
+    border-radius: 16px;
+    margin-top: 16px;
+}
+
+select, input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #111827;
+    color: white;
 }
 
 button {
     width: 100%;
     margin-top: 20px;
     padding: 14px;
-    border-radius: 10px;
+    border-radius: 16px;
     border: none;
-    background: #0066ff;
-    color: white;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
 }
 
-button:hover {
+.primary-btn {
+    background: #0066ff;
+    color: white;
+}
+
+.primary-btn:hover {
     background: #004ec2;
 }
 
+/* ===== MODAL ===== */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     display: none;
     justify-content: center;
     align-items: center;
 }
 
-.modal-content {
-    background: white;
+.modal-box {
+    background: #111827;
     padding: 30px;
-    border-radius: 18px;
-    width: 450px;
+    width: 420px;
+    border-radius: 24px;
+    text-align: center;
 }
 
-.close-btn {
+.modal-box h2 {
+    margin-top: 0;
+}
+
+.red {
+    color: #ff3b3b;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
     margin-top: 20px;
-    background: #0066ff;
+}
+
+.modal-buttons button {
+    flex: 1;
+}
+
+/* ===== HIDDEN ===== */
+.hidden {
+    display: none;
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Swap Demo</h2>
-    <button onclick="connectWallet()">Connect Wallet</button>
+<div class="header">
+    <div class="logo"></div>
+    <button class="primary-btn" onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
 </div>
 
-<div class="modal" id="complianceModal">
-    <div class="modal-content">
-        <h3>Compliance Screening Notice</h3>
-        <p>
-        TRM Labs provides blockchain analytics and wallet risk-scoring infrastructure.
-        When a wallet connects to the Uniswap Labs web interface:
-        </p>
+<div class="swap-card hidden" id="swapCard">
+    <h2>Swap</h2>
 
-        <p>
-        The wallet address is checked against sanctions lists, including those maintained by the
-        Office of Foreign Assets Control (OFAC) and datasets that flag wallets associated with
-        ransomware, hacks, fraud, terrorist financing, or other illicit activity.
-        </p>
-
-        <p>
-        This screening is implemented via API-based risk scoring and sanctions monitoring.
-        It is not identity-based KYC. It is address-based screening. If an address is determined
-        to be a sanctioned entity, it is blocked from further interacting with the Uniswap interface.
-        </p>
-
-        <button class="close-btn" onclick="proceed()">Continue</button>
+    <div class="input-box">
+        <label>From</label>
+        <select id="fromToken" onchange="checkToken()">
+            <option value="">Select Token</option>
+            <option>A7A5</option>
+            <option>McLarencoin</option>
+            <option>Murphycoin</option>
+            <option>Dutchcoin</option>
+            <option>Germcoin</option>
+            <option>Sprucecoin</option>
+            <option>Nistlercoin</option>
+            <option>Meadowlarkcoin</option>
+        </select>
     </div>
+
+    <div class="input-box">
+        <label>Recipient</label>
+        <select id="recipient" onchange="checkRecipient()">
+            <option value="">Select Counterparty</option>
+            <option>Lindsay</option>
+            <option>Brian</option>
+        </select>
+    </div>
+
+    <div class="input-box">
+        <label>Amount</label>
+        <input type="number" placeholder="0.0">
+    </div>
+
+    <button class="primary-btn">Swap</button>
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-box" id="modalContent"></div>
 </div>
 
 <script>
 function connectWallet() {
-    document.getElementById("complianceModal").style.display = "flex";
+    showModal(
+        "Compliance Screening Notice",
+        "TRM Labs provides blockchain analytics and wallet risk-scoring infrastructure. When a wallet connects, the address is checked against sanctions lists including OFAC and datasets flagging ransomware, hacks, fraud, terrorist financing, or other illicit activity. This is API-based sanctions screening. It is address-based, not identity-based KYC. Sanctioned addresses are blocked.",
+        false,
+        true
+    );
+}
+
+function showModal(title, message, redTitle=false, showContinue=true) {
+    const modal = document.getElementById("modal");
+    const box = document.getElementById("modalContent");
+
+    let buttons = `<button onclick="closeModal()">Go back</button>`;
+    if (showContinue) {
+        buttons += `<button class="primary-btn" onclick="proceed()">Continue</button>`;
+    }
+
+    box.innerHTML = `
+        <h2 class="${redTitle ? 'red' : ''}">${title}</h2>
+        <p>${message}</p>
+        <div class="modal-buttons">
+            ${buttons}
+        </div>
+    `;
+
+    modal.style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
 }
 
 function proceed() {
-    window.location.href = "swap.html";
+    closeModal();
+    document.getElementById("swapCard").classList.remove("hidden");
+    document.getElementById("connectBtn").classList.add("hidden");
+}
+
+function checkToken() {
+    const token = document.getElementById("fromToken").value;
+
+    if (token === "A7A5") {
+        showModal(
+            "Not available",
+            "Unavailable at this time: Uniswap delists tokens deemed to be developed or backed by sanctioned entities, such as A7A5 which is Russian-based and backed by the ruble.",
+            false,
+            false   // NO CONTINUE BUTTON
+        );
+    }
+
+    if (token === "McLarencoin") {
+        showModal(
+            "Malicious token detected",
+            "McLarencoin has been flagged as malicious. Always do your own research before proceeding.",
+            true,
+            true
+        );
+    }
+
+    if (token === "Murphycoin") {
+        showModal(
+            "100% sell fee detected",
+            "Murphycoin charges a 100% fee when sold. Swapping this token may result in total loss of funds.",
+            true,
+            true
+        );
+    }
+}
+
+function checkRecipient() {
+    const recipient = document.getElementById("recipient").value;
+
+    if (recipient === "Brian") {
+        showModal(
+            "fraudulent user detected.",
+            "fraudulent user detected.",
+            true,
+            false
+        );
+    }
 }
 </script>
 
